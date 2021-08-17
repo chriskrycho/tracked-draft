@@ -1,4 +1,4 @@
-import { draftStateFor, DraftState, finalize } from 'draft-state';
+import { draftStateFor, DraftState, finalize } from 'draft-tracked-state';
 import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
 import { tracked } from '@glimmer/tracking';

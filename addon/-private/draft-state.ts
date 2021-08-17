@@ -33,8 +33,8 @@ class _Draft<T extends object> implements ProxyHandler<T> {
       warn(
         'You are creating a DraftState for an object which already has a `finalize` method!\n\t' +
           'You will not be able to use the built-in `DraftState.finalize()` method.\n\t' +
-          'To finalize, `import { finalize } from "draft-state"` and call `finalize(draft)` instead.',
-        { id: 'draft-state::overriding-finalize' }
+          'To finalize, `import { finalize } from "draft-tracked-state"` and call `finalize(draft)` instead.',
+        { id: 'draft-tracked-state::overriding-finalize' }
       );
     }
 
@@ -64,7 +64,7 @@ class _Draft<T extends object> implements ProxyHandler<T> {
         `Attempting to access ${prop.toString()} on object ${JSON.stringify(
           _target
         )}`,
-        { id: 'draft-state::bad-set' }
+        { id: 'draft-tracked-state::bad-set' }
       );
     }
 

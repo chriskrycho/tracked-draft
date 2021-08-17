@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import { DraftState } from 'draft-state';
+import { DraftState } from 'draft-tracked-state';
 
 interface ProfileFormArgs {
   user: DraftState<{

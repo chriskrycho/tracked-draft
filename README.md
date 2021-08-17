@@ -1,7 +1,7 @@
-draft-state
+draft-tracked-state
 ==============================================================================
 
-A basic draft-state helper which neatly solves a common problem in Ember and Glimmer apps: wanting to create a "fork" of a given set of tracked root state which you want to allow to diverge from the original, with the ability to sync it back on demand. The primary scenario in which this is useful is form fields, where you want to allow a user to edit state but don't necessarily wanted it reflected reactively throughout the rest of the app, but where you also want a straightforward way to push the changes into the original store trivially.
+A basic draft state helper which neatly solves a common problem in Ember and Glimmer apps: wanting to create a "fork" of a given set of tracked root state which you want to allow to diverge from the original, with the ability to sync it back on demand. The primary scenario in which this is useful is form fields, where you want to allow a user to edit state but don't necessarily wanted it reflected reactively throughout the rest of the app, but where you also want a straightforward way to push the changes into the original store trivially.
 
 For example (see the dummy app for a live example!):
 
@@ -92,7 +92,7 @@ Installation
 ------------------------------------------------------------------------------
 
 ```
-ember install draft-state
+ember install draft-tracked-state
 ```
 
 

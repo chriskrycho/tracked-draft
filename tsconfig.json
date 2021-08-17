@@ -21,28 +21,13 @@
     "module": "es6",
     "experimentalDecorators": true,
     "paths": {
-      "dummy/tests/*": [
-        "tests/*"
-      ],
-      "dummy/*": [
-        "tests/dummy/app/*",
-        "app/*"
-      ],
-      "draft-state": [
-        "addon"
-      ],
-      "draft-state/*": [
-        "addon/*"
-      ],
-      "draft-state/test-support": [
-        "addon-test-support"
-      ],
-      "draft-state/test-support/*": [
-        "addon-test-support/*"
-      ],
-      "*": [
-        "types/*"
-      ]
+      "dummy/tests/*": ["tests/*"],
+      "dummy/*": ["tests/dummy/app/*", "app/*"],
+      "draft-tracked-state": ["addon"],
+      "draft-tracked-state/*": ["addon/*"],
+      "draft-tracked-state/test-support": ["addon-test-support"],
+      "draft-tracked-state/test-support/*": ["addon-test-support/*"],
+      "*": ["types/*"]
     }
   },
   "include": [
