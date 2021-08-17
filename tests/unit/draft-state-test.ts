@@ -1,7 +1,8 @@
-import { draftStateFor, finalize } from 'draft-state';
+import { draftStateFor, finalize, DraftState } from 'draft-state';
 import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
 import { tracked } from '@glimmer/tracking';
+import { expectTypeOf } from 'expect-type';
 
 module('the DraftState type', function (hooks) {
   setupTest(hooks);
@@ -29,8 +30,9 @@ module('the DraftState type', function (hooks) {
     });
 
     test('succeeds with an object', function (assert) {
-      const draft = draftStateFor({});
+      const draft = draftStateFor({ a: true });
       assert.ok(draft);
+      expectTypeOf(draft.a).toEqualTypeOf(true);
     });
   });
 
@@ -84,5 +86,8 @@ module('the DraftState type', function (hooks) {
 
     finalize(draft);
     assert.equal(original.data, 456, 'updates the original data');
+
+    type Finalize<T extends object> = (draft: DraftState<T>) => T;
+    expectTypeOf(finalize).toEqualTypeOf<Finalize<object>>();
   });
 });

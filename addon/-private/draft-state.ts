@@ -37,7 +37,7 @@ const ORIGINAL = Symbol('original');
 class _Draft<T extends object> implements ProxyHandler<T> {
   // This doesn't actually exist at runtime; it's just here to make it so that
   // the exported type is not constructible.
-  private declare brand: 'draft';
+  private declare readonly brand: 'draft';
 
   [ORIGINAL]: T;
 
