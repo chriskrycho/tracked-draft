@@ -55,6 +55,10 @@ module.exports = {
       },
       plugins: ['node'],
       extends: ['plugin:node/recommended'],
+      rules: {
+        // We *want* to use traditional require statements in Node `.js` files.
+        '@typescript-eslint/no-var-requires': 'off',
+      },
     },
   ],
 };
