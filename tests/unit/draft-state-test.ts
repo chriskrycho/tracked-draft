@@ -4,7 +4,7 @@ import { module, test } from 'qunit';
 import { tracked } from '@glimmer/tracking';
 import { expectTypeOf } from 'expect-type';
 
-module('the DraftState type', function (hooks) {
+module('Unit | DraftState', function (hooks) {
   setupTest(hooks);
 
   module('construction', function () {
