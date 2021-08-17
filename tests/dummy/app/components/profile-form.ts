@@ -21,7 +21,7 @@ export default class ProfileForm extends Component<ProfileFormArgs> {
     this.args.user.age = valueAsNumber;
   };
 
-  saveChanges = (event: SubmitEvent): void => {
+  saveChanges = (event: Event): void => {
     event.preventDefault();
     this.args.user.finalize();
   };
