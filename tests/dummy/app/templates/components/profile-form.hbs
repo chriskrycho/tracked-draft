@@ -1,0 +1,17 @@
+<div>
+  <form {{on 'submit' this.saveChanges}}>
+    <label>
+      name:
+      <input name="name" type="text" {{on 'input' this.updateName}} />
+    </label>
+    <label>
+      age:
+      <input name="age" type="number" {{on 'input' this.updateAge}} />
+    </label>
+    <button type="submit">
+      Save changes
+    </button>
+  </form>
+  <p>Updated name: {{@user.name}}</p>
+  <p>Updated age: {{@user.age}}</p>
+</div>
