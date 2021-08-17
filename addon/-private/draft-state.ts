@@ -83,12 +83,22 @@ class _Draft<T extends object> implements ProxyHandler<T> {
       throw new DraftStateAccessError(prop, _target);
     }
 
-    // UNSAFETY: this is wildly unsafe, but there is nothing we can do about it.
-    // We do not have any way to check at runtime that the type is the same as
-    // the type allowed by the type signature of the base type. Any attempt to
-    // do runtime type-checking will be too narrow for cases where the original
-    // type allows, for example, `[prop]: string | number`, because it will only
-    // accept whatever is *currently set* in the original.
+    // SAFETY: this may appear wildly unsafe, since we cannot guarantee what the
+    // type of `prop` and `value` are here, and have to perform the cast for
+    // `value` to make this check: we do not have any way to check at runtime
+    // that the type is the same as the type allowed by the type signature of
+    // the base type. (Any attempt to do runtime type-checking will be too
+    // narrow for cases where the original type allows, for example, `[prop]:
+    // string | number`, because it will only accept whatever is *currently set*
+    // in the original.)
+    //
+    // However, the Proxy appears identical to the types of the original, so the
+    // type checker catches this at the call site: the only way a user could
+    // provide an invalid value *in TypeScript* is if they have their strictness
+    // settings dialed down to allow `any` or not to check for `null` or
+    // `undefined`, etc., or by explicitly making an unsafe cast themselves. (In
+    // JavaScript callers, anything goes, of course.) Any *actual* unsafety is
+    // therefore opt-in by the caller.
     getFork(this[ORIGINAL]).set(prop, value as T[keyof T]);
     return true;
   }
