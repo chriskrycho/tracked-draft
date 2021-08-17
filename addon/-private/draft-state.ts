@@ -1,45 +1,24 @@
+import { warn } from '@ember/debug';
 import { TrackedMap } from 'tracked-built-ins';
 
-class DraftStateAccessError extends Error {
-  readonly name = 'DraftStateAccessError';
-
-  constructor(badKey: PropertyKey, target: unknown) {
-    super(
-      `Attempting to access ${badKey.toString()} on object ${JSON.stringify(
-        target
-      )}`
-    );
-  }
+function hasFinalize<T extends object>(
+  t: T
+): t is T & { finalize(...args: unknown[]): unknown } {
+  return (
+    'finalize' in t &&
+    typeof (t as { finalize: unknown }).finalize === 'function'
+  );
 }
 
-class DraftStateConstructorError extends Error {
-  name = 'DraftStateConstructorError';
-  constructor(badArg: unknown) {
-    super(`Attempted to construct a DraftState with "${badArg}"`);
-  }
-}
-
-const FORKS = new WeakMap<object, TrackedMap<PropertyKey, unknown>>();
-
-function getFork(original: object): TrackedMap<PropertyKey, unknown> {
-  const fork = FORKS.get(original);
-  if (!fork) {
-    throw new Error(
-      'DraftState was constructed incorrectly. Please file a bug!'
-    );
-  }
-
-  return fork;
-}
-
-const ORIGINAL = Symbol('original');
+const FINALIZE = Symbol('finalize');
 
 class _Draft<T extends object> implements ProxyHandler<T> {
   // This doesn't actually exist at runtime; it's just here to make it so that
   // the exported type is not constructible.
   private declare readonly brand: 'draft';
 
-  [ORIGINAL]: T;
+  #original: T;
+  #draft = new TrackedMap<keyof T, T[keyof T]>();
 
   constructor(original: T | null | undefined) {
     if (
@@ -47,41 +26,51 @@ class _Draft<T extends object> implements ProxyHandler<T> {
       typeof original !== 'object' ||
       Array.isArray(original)
     ) {
-      throw new DraftStateConstructorError(original);
+      throw new Error(`Attempted to construct a DraftState with "${original}"`);
     }
 
-    FORKS.set(original, new TrackedMap());
-    this[ORIGINAL] = original;
+    if (hasFinalize(original)) {
+      warn(
+        'You are creating a DraftState for an object which already has a `finalize` method!\n\t' +
+          'You will not be able to use the built-in `DraftState.finalize()` method.\n\t' +
+          'To finalize, `import { finalize } from "draft-state"` and call `finalize(draft)` instead.',
+        { id: 'draft-state::overriding-finalize' }
+      );
+    }
+
+    this.#original = original;
   }
 
-  get(_target: T, prop: PropertyKey): T[keyof T] {
-    // SAFETY: the *only* thing allowed to interact with this is the `finalize`
-    // function, and the `ORIGINAL` symbol is not exported.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (prop === ORIGINAL) return this[ORIGINAL] as any;
-
-    if (!(prop in this[ORIGINAL])) {
-      throw new DraftStateAccessError(prop, _target);
+  get(target: T, prop: PropertyKey, receiver: _Draft<T>): T[keyof T] {
+    if (!(prop in this.#original)) {
+      return prop === 'finalize' || prop === FINALIZE
+        ? this[FINALIZE].bind(this)
+        : Reflect.get(target, prop, receiver);
     }
 
     // SAFETY: this cast is safe because of the assertion immediately above,
     // which is invisible to TS.
     const key = prop as keyof T;
 
-    // SAFETY: we know from construction and handling in `set` that `#original`
-    // always maps to *this* `T`.
-    const fork = getFork(this[ORIGINAL]) as TrackedMap<keyof T, T[keyof T]>;
-
     // This makes access transparent to a consumer: if the state *has* been
     // forked into the draft, the user gets that; otherwise, they just get the
     // original.
-    return fork.get(key) ?? this[ORIGINAL][key];
+    return this.#draft.get(key) ?? this.#original[key];
   }
 
   set(_target: T, prop: PropertyKey, value: unknown): boolean {
-    if (!(prop in this[ORIGINAL])) {
-      throw new DraftStateAccessError(prop, _target);
+    if (!(prop in this.#original)) {
+      warn(
+        `Attempting to access ${prop.toString()} on object ${JSON.stringify(
+          _target
+        )}`,
+        { id: 'draft-state::bad-set' }
+      );
     }
+
+    // SAFETY: this cast is safe because of the assertion immediately above,
+    // which is invisible to TS.
+    const key = prop as keyof T;
 
     // SAFETY: this may appear wildly unsafe, since we cannot guarantee what the
     // type of `prop` and `value` are here, and have to perform the cast for
@@ -99,8 +88,20 @@ class _Draft<T extends object> implements ProxyHandler<T> {
     // `undefined`, etc., or by explicitly making an unsafe cast themselves. (In
     // JavaScript callers, anything goes, of course.) Any *actual* unsafety is
     // therefore opt-in by the caller.
-    getFork(this[ORIGINAL]).set(prop, value as T[keyof T]);
+    this.#draft.set(key, value as T[keyof T]);
     return true;
+  }
+
+  finalize(): T {
+    return this[FINALIZE]();
+  }
+
+  [FINALIZE](): T {
+    for (const [key, value] of this.#draft.entries()) {
+      this.#original[key] = value;
+    }
+
+    return this.#original;
   }
 }
 
@@ -117,16 +118,12 @@ export function draftStateFor<T extends object>(original: T): DraftState<T> {
   return proxy as unknown as DraftState<T>;
 }
 
+/**
+  Given a draft state, persist its changes into the original object.
+
+  @param draft The DraftState to finalize back into the original object.
+  @returns The original object, finalized.
+ */
 export function finalize<T extends object>(draft: DraftState<T>): T {
-  const original = draft[ORIGINAL];
-
-  // SAFETY: we know from construction and handling in `set` that `#original`
-  // always maps to *this* `T`.
-  const fork = getFork(original) as TrackedMap<keyof T, T[keyof T]>;
-
-  for (const [key, value] of fork.entries()) {
-    original[key] = value;
-  }
-
-  return original;
+  return draft[FINALIZE]();
 }

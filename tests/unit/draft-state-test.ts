@@ -1,4 +1,4 @@
-import { draftStateFor, finalize, DraftState } from 'draft-state';
+import { draftStateFor, DraftState, finalize } from 'draft-state';
 import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
 import { tracked } from '@glimmer/tracking';
@@ -32,6 +32,7 @@ module('the DraftState type', function (hooks) {
     test('succeeds with an object', function (assert) {
       const draft = draftStateFor({ a: true });
       assert.ok(draft);
+      expectTypeOf(draft).toEqualTypeOf<DraftState<{ a: boolean }>>();
       expectTypeOf(draft.a).toEqualTypeOf(true);
     });
   });
@@ -75,19 +76,93 @@ module('the DraftState type', function (hooks) {
     });
   });
 
-  test('calling `finalize(draft)`', function (assert) {
-    class Original {
-      @tracked data = 123;
-    }
+  module('finalizing', function () {
+    module('with `draft.finalize()`', function () {
+      test('in the default case', function (assert) {
+        class Original {
+          @tracked data = 123;
+        }
 
-    const original = new Original();
-    const draft = draftStateFor(original);
-    draft.data = 456;
+        const original = new Original();
+        const draft = draftStateFor(original);
+        draft.data = 456;
 
-    finalize(draft);
-    assert.equal(original.data, 456, 'updates the original data');
+        const result = draft.finalize();
+        assert.equal(original.data, 456, 'updates the original data');
+        assert.deepEqual(
+          result,
+          original,
+          'the call returns the finalized object'
+        );
+        expectTypeOf(result).toEqualTypeOf(original);
+      });
 
-    type Finalize<T extends object> = (draft: DraftState<T>) => T;
-    expectTypeOf(finalize).toEqualTypeOf<Finalize<object>>();
+      test('when the original object has its own finalize method', function (assert) {
+        const RETURN = 'this is not a draft state!';
+        class Original {
+          @tracked data = 123;
+
+          finalize() {
+            return RETURN;
+          }
+        }
+
+        const original = new Original();
+        const draft = draftStateFor(original);
+        draft.data = 456;
+
+        const result = draft.finalize();
+        assert.equal(original.data, 123, 'the original data is not updated');
+        assert.equal(result, RETURN, 'the original method returns correctly');
+        expectTypeOf(result).toEqualTypeOf<ReturnType<Original['finalize']>>();
+      });
+    });
+
+    module('with `finalize(draft)', function () {
+      test('`in the default case', function (assert) {
+        assert.expect(2);
+
+        class Original {
+          @tracked data = 123;
+        }
+
+        const original = new Original();
+        const draft = draftStateFor(original);
+        draft.data = 456;
+
+        const result = finalize(draft);
+        assert.equal(original.data, 456, 'updates the original data');
+        assert.deepEqual(
+          result,
+          original,
+          'the call returns the finalized object'
+        );
+        expectTypeOf(result).toEqualTypeOf(original);
+      });
+
+      test('`when the original object has its own finalize method', function (assert) {
+        class Original {
+          @tracked data = 123;
+
+          finalize() {
+            assert.notOk(true, 'should never be called');
+            return 'not a draft state';
+          }
+        }
+
+        const original = new Original();
+        const draft = draftStateFor(original);
+        draft.data = 456;
+
+        const result = finalize(draft);
+        assert.equal(original.data, 456, 'updates the original data');
+        assert.deepEqual(
+          result,
+          original,
+          'the call returns the finalized object'
+        );
+        expectTypeOf(result).toEqualTypeOf(original);
+      });
+    });
   });
 });
