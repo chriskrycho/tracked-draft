@@ -1,5 +1,5 @@
 import { warn } from '@ember/debug';
-import { TrackedMap } from 'tracked-built-ins';
+import { TrackedMap } from 'tracked-maps-and-sets';
 
 function hasFinalize<T extends object>(
   t: T
