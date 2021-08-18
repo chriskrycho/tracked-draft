@@ -3,7 +3,7 @@
 ## Installation
 
 * `git clone <repository-url>`
-* `cd draft-tracked-state`
+* `cd tracked-draft`
 * `yarn install`
 
 ## Linting

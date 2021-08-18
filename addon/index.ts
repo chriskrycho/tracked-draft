@@ -1,1 +1,1 @@
-export { draftStateFor, finalize, DraftState } from './-private/draft-state';
+export { draftFor, finalize, Draft as DraftState } from './-private/draft';

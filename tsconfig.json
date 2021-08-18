@@ -23,10 +23,10 @@
     "paths": {
       "dummy/tests/*": ["tests/*"],
       "dummy/*": ["tests/dummy/app/*", "app/*"],
-      "draft-tracked-state": ["addon"],
-      "draft-tracked-state/*": ["addon/*"],
-      "draft-tracked-state/test-support": ["addon-test-support"],
-      "draft-tracked-state/test-support/*": ["addon-test-support/*"],
+      "tracked-draft": ["addon"],
+      "tracked-draft/*": ["addon/*"],
+      "tracked-draft/test-support": ["addon-test-support"],
+      "tracked-draft/test-support/*": ["addon-test-support/*"],
       "*": ["types/*"]
     }
   },

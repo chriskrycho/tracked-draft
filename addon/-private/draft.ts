@@ -33,8 +33,8 @@ class _Draft<T extends object> implements ProxyHandler<T> {
       warn(
         'You are creating a DraftState for an object which already has a `finalize` method!\n\t' +
           'You will not be able to use the built-in `DraftState.finalize()` method.\n\t' +
-          'To finalize, `import { finalize } from "draft-tracked-state"` and call `finalize(draft)` instead.',
-        { id: 'draft-tracked-state::overriding-finalize' }
+          'To finalize, `import { finalize } from "tracked-draft"` and call `finalize(draft)` instead.',
+        { id: 'tracked-draft::overriding-finalize' }
       );
     }
 
@@ -64,7 +64,7 @@ class _Draft<T extends object> implements ProxyHandler<T> {
         `Attempting to access ${prop.toString()} on object ${JSON.stringify(
           _target
         )}`,
-        { id: 'draft-tracked-state::bad-set' }
+        { id: 'tracked-draft::bad-set' }
       );
     }
 
@@ -105,9 +105,9 @@ class _Draft<T extends object> implements ProxyHandler<T> {
   }
 }
 
-export type DraftState<T extends object> = T & _Draft<T>;
+export type Draft<T extends object> = T & _Draft<T>;
 
-export function draftStateFor<T extends object>(original: T): DraftState<T> {
+export function draftFor<T extends object>(original: T): Draft<T> {
   const handler = new _Draft(original);
   const proxy = new Proxy(original, handler);
 
@@ -115,7 +115,7 @@ export function draftStateFor<T extends object>(original: T): DraftState<T> {
   // trap for gets and sets; the object behaves exactly like the original except
   // for its lazy reads and writes to a fork of the original storage. This just
   // "brands" it so that it can *only* be constructed here.
-  return proxy as unknown as DraftState<T>;
+  return proxy as unknown as Draft<T>;
 }
 
 /**
@@ -124,6 +124,6 @@ export function draftStateFor<T extends object>(original: T): DraftState<T> {
   @param draft The DraftState to finalize back into the original object.
   @returns The original object, finalized.
  */
-export function finalize<T extends object>(draft: DraftState<T>): T {
+export function finalize<T extends object>(draft: Draft<T>): T {
   return draft[FINALIZE]();
 }

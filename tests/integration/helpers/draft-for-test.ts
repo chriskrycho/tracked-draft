@@ -13,14 +13,14 @@ interface Context extends BaseContext {
   original: Original;
 }
 
-module('Integration | Helper | draft-state-for', function (hooks) {
+module('Integration | Helper | draft-for', function (hooks) {
   setupRenderingTest(hooks);
 
   test('renders draft state correctly', async function (this: Context, assert) {
     this.original = new Original();
 
     await render(hbs`
-      {{#let (draft-state-for this.original) as |draft|}}
+      {{#let (draft-for this.original) as |draft|}}
         <p data-test-orig>{{this.original.data}}</p>
         <p data-test-draft>{{draft.data}}</p>
         <label>

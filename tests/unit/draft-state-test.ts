@@ -1,4 +1,4 @@
-import { draftStateFor, DraftState, finalize } from 'draft-tracked-state';
+import { draftFor, DraftState, finalize } from 'tracked-draft';
 import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
 import { tracked } from '@glimmer/tracking';
@@ -11,26 +11,26 @@ module('Unit | DraftState', function (hooks) {
     test('throws if the the original is not an object', function (assert) {
       /* eslint-disable @typescript-eslint/ban-ts-comment */
       // @ts-expect-error
-      assert.throws(() => draftStateFor(null), 'when it is null');
+      assert.throws(() => draftFor(null), 'when it is null');
 
       // @ts-expect-error
-      assert.throws(() => draftStateFor(undefined), 'when it is undefined');
+      assert.throws(() => draftFor(undefined), 'when it is undefined');
 
       // @ts-expect-error
-      assert.throws(() => draftStateFor(123), 'when it is a number');
+      assert.throws(() => draftFor(123), 'when it is a number');
 
       // @ts-expect-error
-      assert.throws(() => draftStateFor('hello'), 'when it is a string');
+      assert.throws(() => draftFor('hello'), 'when it is a string');
 
       // @ts-expect-error
-      assert.throws(() => draftStateFor(true), 'when it is a boolean');
+      assert.throws(() => draftFor(true), 'when it is a boolean');
 
-      assert.throws(() => draftStateFor([]), 'when it is an array');
+      assert.throws(() => draftFor([]), 'when it is an array');
       /* eslint-enable @typescript-eslint/ban-ts-comment */
     });
 
     test('succeeds with an object', function (assert) {
-      const draft = draftStateFor({ a: true });
+      const draft = draftFor({ a: true });
       assert.ok(draft);
       expectTypeOf(draft).toEqualTypeOf<DraftState<{ a: boolean }>>();
       expectTypeOf(draft.a).toEqualTypeOf(true);
@@ -44,7 +44,7 @@ module('Unit | DraftState', function (hooks) {
       }
 
       const original = new Original();
-      const draft = draftStateFor(original);
+      const draft = draftFor(original);
 
       draft.data = false;
 
@@ -58,7 +58,7 @@ module('Unit | DraftState', function (hooks) {
       }
 
       const original = new Original();
-      const draft = draftStateFor(original);
+      const draft = draftFor(original);
 
       assert.strictEqual(
         draft.refType,
@@ -84,7 +84,7 @@ module('Unit | DraftState', function (hooks) {
         }
 
         const original = new Original();
-        const draft = draftStateFor(original);
+        const draft = draftFor(original);
         draft.data = 456;
 
         const result = draft.finalize();
@@ -108,7 +108,7 @@ module('Unit | DraftState', function (hooks) {
         }
 
         const original = new Original();
-        const draft = draftStateFor(original);
+        const draft = draftFor(original);
         draft.data = 456;
 
         const result = draft.finalize();
@@ -127,7 +127,7 @@ module('Unit | DraftState', function (hooks) {
         }
 
         const original = new Original();
-        const draft = draftStateFor(original);
+        const draft = draftFor(original);
         draft.data = 456;
 
         const result = finalize(draft);
@@ -151,7 +151,7 @@ module('Unit | DraftState', function (hooks) {
         }
 
         const original = new Original();
-        const draft = draftStateFor(original);
+        const draft = draftFor(original);
         draft.data = 456;
 
         const result = finalize(draft);

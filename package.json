@@ -1,5 +1,5 @@
 {
-  "name": "draft-tracked-state",
+  "name": "tracked-draft",
   "version": "0.0.0",
   "description": "The default blueprint for ember-cli addons.",
   "keywords": [

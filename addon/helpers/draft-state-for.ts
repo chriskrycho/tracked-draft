@@ -1,6 +1,8 @@
 import { helper } from '@ember/component/helper';
-import { draftStateFor } from '../-private/draft-state';
+import { draftFor } from '../-private/draft';
 
-export default helper(<T extends object>([original]: [T]) =>
-  draftStateFor(original)
-);
+function draftForHelper<T extends object>([original]: [T]) {
+  return draftFor(original);
+}
+
+export default helper(draftForHelper);
