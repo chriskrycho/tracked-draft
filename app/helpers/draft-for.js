@@ -1,1 +1,1 @@
-export { default } from 'tracked-draft/helpers/draft-state-for';
+export { default } from 'tracked-draft/helpers/draft-for';

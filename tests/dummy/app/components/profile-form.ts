@@ -1,3 +1,4 @@
+import { assert } from '@ember/debug';
 import Component from '@glimmer/component';
 import { DraftState } from 'tracked-draft';
 
@@ -23,6 +24,12 @@ export default class ProfileForm extends Component<ProfileFormArgs> {
 
   saveChanges = (event: Event): void => {
     event.preventDefault();
+    assert('must be set on form', event.target instanceof HTMLFormElement);
+    const name = event.target.elements.namedItem('name') as HTMLInputElement;
+    name.value = '';
+    name.focus();
+    const age = event.target.elements.namedItem('age') as HTMLInputElement;
+    age.value = '';
     this.args.user.finalize();
   };
 }

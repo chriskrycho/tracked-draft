@@ -28,7 +28,7 @@ For example (see the dummy app for a live example!):
 
     ```hbs
     <CurrentProfile @user={{this.userInfo}}>
-    <ProfileForm @user={{draft-state-for this.userInfo}} />
+    <ProfileForm @user={{draft-for this.userInfo}} />
     ```
 
 - The `CurrentProfile` component:
