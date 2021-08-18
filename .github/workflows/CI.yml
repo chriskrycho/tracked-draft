@@ -6,14 +6,14 @@ on:
     # filtering branches here prevents duplicate builds from pull_request and push
     branches:
       - main
-      - "v*"
+      - 'v*'
     # always run CI for tags
     tags:
-      - "*"
+      - '*'
 
 jobs:
   lint:
-    name: "Linting"
+    name: 'Linting'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -21,49 +21,28 @@ jobs:
       - run: yarn install --frozen-lockfile --non-interactive
       - run: yarn lint
 
-  tests_linux:
+  tests:
     needs: lint
-    name: "Tests: ubuntu (node@${{ matrix.node-version }})"
+    name: 'Tests: ${{ matrix.os }}'
+    runs-on: '${{ matrix.os }}-latest'
+
+    strategy:
+      matrix:
+        os: [ubuntu, macOS, windows]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: volta-cli/action@v1
+      - run: yarn install --frozen-lockfile --non-interactive
+      - run: ember test
+
+  tests_compat:
+    needs: lint
+    name: 'Tests: Compatibility'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # Node 15 is currently broken, Node 12 is almost EOL, Node 16 isn't out
-        node-version: ["14"]
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: volta-cli/action@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: yarn install --frozen-lockfile --non-interactive
-      - run: yarn test
-
-  tests_other:
-    needs: lint
-    name: "Tests: ${{ matrix.os }}"
-    runs-on: "${{ matrix.os }}-latest"
-
-    strategy:
-      matrix:
-        os: [macOS, windows]
-
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v2
       - uses: volta-cli/action@v1
       - run: yarn install --frozen-lockfile --non-interactive
-      - run: yarn test
-
-  tests_ts:
-    needs: lint
-    name: "Tests: TS ${{ matrix.ts-version }}"
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    strategy:
-      matrix:
-        ts-version: ["4.1", "4.2", "4.3", "next"]
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: volta-cli/action@v1
-      - run: yarn install --frozen-lockfile --non-interactive
-      - run: "./node_modules/.bin/ember try:one ts-${{ matrix.ts-version }}"
+      - run: './node_modules/.bin/ember try:each'
