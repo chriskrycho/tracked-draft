@@ -1,6 +1,6 @@
 module.exports = {
   useYarn: true,
-  command: 'tsc --noEmit && tsc --noEmit --project type-tests/base.json',
+  command: 'tsc --noEmit && tsc --noEmit',
   scenarios: [
     {
       name: 'ts-4.1',
