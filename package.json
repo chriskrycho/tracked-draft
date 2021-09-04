@@ -35,7 +35,7 @@
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
     "@ember/test-helpers": "^2.4.0",
-    "@embroider/test-setup": "^0.43.5",
+    "@embroider/test-setup": "^0.44.0",
     "@glimmer/component": "^1.0.4",
     "@glimmer/tracking": "^1.0.4",
     "@types/ember-qunit": "^3.4.14",
@@ -50,7 +50,7 @@
     "@types/qunit": "^2.11.2",
     "@types/rsvp": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
-    "@typescript-eslint/parser": "^4.29.2",
+    "@typescript-eslint/parser": "^4.30.0",
     "broccoli-asset-rev": "^3.0.0",
     "ember-auto-import": "^1.11.2",
     "ember-cli": "~3.28.0",
