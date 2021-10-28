@@ -45,7 +45,7 @@
     "@types/ember__debug": "^3.16.5",
     "@types/ember__routing": "^3.16.15",
     "@types/ember__template": "^3.16.1",
-    "@types/ember__test-helpers": "^2.0.1",
+    "@types/ember__test-helpers": "^2.0.2",
     "@types/htmlbars-inline-precompile": "^1.0.1",
     "@types/qunit": "^2.11.2",
     "@types/rsvp": "^4.0.4",
