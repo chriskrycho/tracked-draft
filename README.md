@@ -1,8 +1,8 @@
 tracked-draft
 ==============================================================================
 
-🛑 WIP: not ready to use yet :stop:
------------------------------------
+🛑 WIP: not ready to use yet 🛑
+--------------------------------
 
 This kind of works, but it is not remotely production-ready yet. Feel free to play with it, but you should not rely on it!
 
