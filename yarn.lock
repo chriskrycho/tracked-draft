@@ -1074,10 +1074,10 @@
     resolve "^1.8.1"
     semver "^7.3.2"
 
-"@embroider/test-setup@^0.44.1":
-  version "0.44.1"
-  resolved "https://registry.yarnpkg.com/@embroider/test-setup/-/test-setup-0.44.1.tgz#9aeebd52445871171374d8b3a2e4a3d70060a9c9"
-  integrity sha512-l2Xhlgucnagx1e17So6a+BA8B1842NdrVMb/Dvq0z7z4mIu3JrdDo982DBNL0gxWbK/dM8x7aTm057FTER6v5Q==
+"@embroider/test-setup@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@embroider/test-setup/-/test-setup-1.7.0.tgz#4614d62eca931f1e6611f664443cf3595be1afad"
+  integrity sha512-SrGf8igzCrQA1A7c7gtcrB8V017GfKyTKuUooMVIja7CbEc6RUCkb0hmw/9A1+sa3+KXQE69mvz+SCwQeP1X/Q==
   dependencies:
     lodash "^4.17.21"
     resolve "^1.20.0"
@@ -11788,10 +11788,10 @@ typescript-memoize@^1.0.0-alpha.3:
   resolved "https://registry.yarnpkg.com/typescript-memoize/-/typescript-memoize-1.0.1.tgz#0a8199aa28f6fe18517f6e9308ef7bfbe9a98d59"
   integrity sha512-oJNge1qUrOK37d5Y6Ly2txKeuelYVsFtNF6U9kXIN7juudcQaHJQg2MxLOy0CqtkW65rVDYuTCOjnSIVPd8z3w==
 
-typescript@^4.4.3:
-  version "4.4.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.3.tgz#bdc5407caa2b109efd4f82fe130656f977a29324"
-  integrity sha512-4xfscpisVgqqDfPaJo5vkd+Qd/ItkoagnHpufr+i2QCHBsNYp+G7UAoyFl8aPtx879u38wPV65rZ8qbGZijalA==
+typescript@^4.6.4:
+  version "4.6.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.6.4.tgz#caa78bbc3a59e6a5c510d35703f6a09877ce45e9"
+  integrity sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg==
 
 uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.6"
